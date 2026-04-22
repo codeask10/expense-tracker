@@ -35,3 +35,26 @@ export interface PaginatedResponse {
   limit: number;
   offset: number;
 }
+
+export interface ExpenseStats {
+  totalExpense: number;       // paise
+  thisMonthExpense: number;   // paise
+  averageExpense: number;     // paise
+}
+
+export interface CategoryBreakdown {
+  name: string;
+  amount: number; // paise
+}
+
+export interface MonthData {
+  month: string;   // "Jan" … "Dec"
+  total: number;   // paise
+  categories: CategoryBreakdown[];
+}
+
+export interface MonthlyDistributionResponse {
+  year: number;
+  availableYears: number[];
+  monthlyData: MonthData[];
+}

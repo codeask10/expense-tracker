@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient, InfiniteData } from '@tanstack/react-query';
 import { createExpense, updateExpense, deleteExpense } from '../services/expense.api';
 import { EXPENSES_KEY_BASE } from './useExpenses';
+import { EXPENSE_STATS_KEY } from './useExpenseStats';
+import { MONTHLY_DISTRIBUTION_KEY } from './useMonthlyDistribution';
 import type { Expense, CreateExpensePayload, PaginatedResponse } from '../types';
 import type { ExpensesQueryKey } from './useExpenses';
 
@@ -53,8 +55,9 @@ export function useCreateExpense(activeQueryKey: ExpensesQueryKey) {
     },
 
     onSettled: () => {
-      // Always refetch to sync real server state
       qc.invalidateQueries({ queryKey: [EXPENSES_KEY_BASE] });
+      qc.invalidateQueries({ queryKey: EXPENSE_STATS_KEY });
+      qc.invalidateQueries({ queryKey: [MONTHLY_DISTRIBUTION_KEY] });
     },
   });
 }
@@ -66,7 +69,11 @@ export function useUpdateExpense() {
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: Parameters<typeof updateExpense>[1] }) =>
       updateExpense(id, payload),
-    onSuccess: () => qc.invalidateQueries({ queryKey: [EXPENSES_KEY_BASE] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [EXPENSES_KEY_BASE] });
+      qc.invalidateQueries({ queryKey: EXPENSE_STATS_KEY });
+      qc.invalidateQueries({ queryKey: [MONTHLY_DISTRIBUTION_KEY] });
+    },
   });
 }
 
@@ -76,6 +83,10 @@ export function useDeleteExpense() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: deleteExpense,
-    onSuccess: () => qc.invalidateQueries({ queryKey: [EXPENSES_KEY_BASE] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [EXPENSES_KEY_BASE] });
+      qc.invalidateQueries({ queryKey: EXPENSE_STATS_KEY });
+      qc.invalidateQueries({ queryKey: [MONTHLY_DISTRIBUTION_KEY] });
+    },
   });
 }

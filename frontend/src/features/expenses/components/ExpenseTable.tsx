@@ -98,7 +98,7 @@ function ExpenseRow({
       </td>
       <td className="px-4 py-3.5">
         {!isOptimistic && (
-          <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center justify-end gap-1">
             <button
               onClick={onEdit}
               className="rounded-lg p-1.5 text-gray-400 hover:bg-blue-50 hover:text-blue-600 transition-colors"
@@ -196,11 +196,14 @@ export function ExpenseTable({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200">
-              {['Date', 'Description', 'Category', 'Amount', ''].map((h) => (
+              {(['Date', 'Description', 'Category', 'Amount'] as const).map((h) => (
                 <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
                   {h}
                 </th>
               ))}
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-gray-400">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
